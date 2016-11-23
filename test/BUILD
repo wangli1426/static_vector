@@ -1,6 +1,6 @@
 cc_test(
-    name = "vector-test",
-    srcs = ["vector-test.cc"],
+    name = "test",
+    srcs = ["vector-test.cc", "unordered_map-test.cc"],
     copts = ["-Iexternal/gtest/include"],
     deps = [
         "@gtest//:main",
