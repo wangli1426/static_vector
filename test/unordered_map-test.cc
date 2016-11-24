@@ -24,8 +24,15 @@ TEST(STATIC_UNORDERED_MAP, MULTIPLEINSERTION) {
 }
 
 TEST(STATIC_UNORDERED_MAP, DUPLICATEDKEYS) {
- static_unordered_map<int, int, 1> m;
- m.insert(1, 100);
- m.insert(1, 102);
- EXPECT_EQ(m[1], 102);
-} 
+  static_unordered_map<int, int, 1> m;
+  m.insert(1, 100);
+  m.insert(1, 102);
+  EXPECT_EQ(m[1], 102);
+}
+
+TEST(STATIC_UNORDERED_MAP, STAITCREFERENCE) {
+  static_unordered_map<int, int, 1> m;
+  m.insert(1, 100);
+  const int value = m[1];
+  EXPECT_EQ(value, 100);
+}  

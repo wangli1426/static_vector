@@ -53,10 +53,21 @@ class static_unordered_map {
         index1 = (index1 + 1) % L;
       }
       assert(false); // key is not in the map.
-      
+      // unreachable code
       return slots[0].value;      
     }     
-   
+  
+    const V& operator[] (const K& key) const {
+      size_t index1 = hash1(key);
+      while(slots[index1].valid) {
+        if(slots[index1].key == key)
+          return slots[index1].value;
+        index1 = (index1 + 1) % L;
+      }
+      assert(false); // key is not in the map.
+      // unreachable code.
+      return slots[0].value;
+    } 
   private:
     size_t hash1(K key) {
       return (h<K>(key) + 16127) * 16273 % L;
