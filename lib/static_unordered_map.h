@@ -20,25 +20,28 @@ class static_unordered_map {
   };
   
   public:
-    static_unordered_map() {  
+    static_unordered_map():size_(0) {  
     }
     void insert(K key, V value) {
       size_t index1 = hash1(key);
       size_t attempts = 0;
-      while(slots[index1].valid && slots[index1].key != key) {
+      while (slots_[index1].valid && slots_[index1].key != key) {
         index1 = (index1 + 1) % L;
         if(attempts++ == L)
           assert(false); // A larger L is required.
       }
-      slots[index1].key = key;
-      slots[index1].value = value;
-      slots[index1].valid = true;
+      
+      if (slots_[index1].key != key) 
+        size_++;
+      slots_[index1].key = key;
+      slots_[index1].value = value;
+      slots_[index1].valid = true;
     }
 
     bool contains(K key) {
       size_t index1 = hash1(key);
-      while(slots[index1].valid) {
-        if(slots[index1].key == key) 
+      while(slots_[index1].valid) {
+        if(slots_[index1].key == key) 
           return true;
         index1 = (index1 + 1) % L;
       }
@@ -47,26 +50,30 @@ class static_unordered_map {
     
     V& operator[] (const K& key) {
       size_t index1 = hash1(key);
-      while(slots[index1].valid) {
-        if(slots[index1].key == key)
-          return slots[index1].value;
+      while(slots_[index1].valid) {
+        if(slots_[index1].key == key)
+          return slots_[index1].value;
         index1 = (index1 + 1) % L;
       }
       assert(false); // key is not in the map.
       // unreachable code
-      return slots[0].value;      
+      return slots_[0].value;      
     }     
   
     const V& operator[] (const K& key) const {
       size_t index1 = hash1(key);
-      while(slots[index1].valid) {
-        if(slots[index1].key == key)
-          return slots[index1].value;
+      while(slots_[index1].valid) {
+        if(slots_[index1].key == key)
+          return slots_[index1].value;
         index1 = (index1 + 1) % L;
       }
       assert(false); // key is not in the map.
       // unreachable code.
-      return slots[0].value;
+      return slots_[0].value;
+    }
+
+    size_t size() const {
+      return size_;
     } 
   private:
     size_t hash1(K key) {
@@ -78,7 +85,8 @@ class static_unordered_map {
     }  
   
   private:
-    entry slots[L];
+    entry slots_[L];
+    size_t size_;
 };
 
 #endif

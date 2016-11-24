@@ -35,4 +35,11 @@ TEST(STATIC_UNORDERED_MAP, STAITCREFERENCE) {
   m.insert(1, 100);
   const int value = m[1];
   EXPECT_EQ(value, 100);
+}
+
+TEST(STATIC_UNORDERED_MAP, SIZE) {
+  static_unordered_map<int, int, 1> m;
+  EXPECT_EQ(m.size(), 0);
+  m.insert(1, 100);
+  EXPECT_EQ(m.size(), 1);
 }  
