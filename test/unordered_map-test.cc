@@ -42,4 +42,51 @@ TEST(STATIC_UNORDERED_MAP, SIZE) {
   EXPECT_EQ(m.size(), 0);
   m.insert(1, 100);
   EXPECT_EQ(m.size(), 1);
-}  
+}
+
+TEST(STATIC_UNORDERED_MAP, REMOVAL) {
+  static_unordered_map<int, int, 10> m;
+  m.insert(100, 1);
+  m.remove(100);
+  EXPECT_EQ(m.size(), 0);
+  EXPECT_EQ(m.contains(100), false);
+}
+
+class A {
+  public:
+  int a;
+  A(int _a): a(_a) {};
+  A(): a(0) {};
+  bool operator== (const A& a) const {
+    return a.a == this->a;
+  }
+};  
+template<>
+unsigned long h<A>(A t) {
+  return 0;
+}
+
+TEST(STATIC_UNORDERED_MAP, CUSTOM_DATATYPE) {
+  static_unordered_map<A, A, 10> m;
+  A a;
+  a.a = 100;
+  m.insert(a, a);
+  EXPECT_EQ(m.size(), 1);
+  EXPECT_EQ(m[a].a, 100);
+}
+
+TEST(STATIC_UNORDERED_MAP, DELETE_OVERFLOW_MID) {
+  static_unordered_map<A, int, 10> m;
+  m.insert(A(0), 0);
+  m.insert(A(1), 1);
+  m.insert(A(2), 2);
+  EXPECT_EQ(m.size(), 3);
+  EXPECT_EQ(m[A(0)], 0);
+  EXPECT_EQ(m[A(1)], 1);
+  m.remove(A(1));
+  EXPECT_EQ(m.contains(A(1)), false);
+  EXPECT_EQ(m.size(), 2);
+  EXPECT_EQ(m[A(0)], 0);
+  EXPECT_EQ(m[A(2)], 2);
+}
+
